@@ -17,7 +17,7 @@ import (
  * email   : 2091938785@qq.com
  * author  : 美丽的地球啊
  * ================================================================================ */
-type wechatpayClient struct {
+type WechatpayClient struct {
 	appId           string
 	apiSecret       string
 	partnerId       string
@@ -30,8 +30,8 @@ type wechatpayClient struct {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 创建Wechatpay客户端
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func NewWechatpayClient(appId, partnerId, apiSecret string) *wechatpayClient {
-	wechatpayClient := new(wechatpayClient)
+func NewWechatpayClient(appId, partnerId, apiSecret string) *WechatpayClient {
+	wechatpayClient := new(WechatpayClient)
 	wechatpayClient.appId = appId
 	wechatpayClient.partnerId = partnerId
 	wechatpayClient.apiSecret = apiSecret
@@ -41,35 +41,35 @@ func NewWechatpayClient(appId, partnerId, apiSecret string) *wechatpayClient {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置货币类型(CNY:人民币)
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) SetFeeType(feeType string) {
+func (s *WechatpayClient) SetFeeType(feeType string) {
 	s.feeType = feeType
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置统一下单地址
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) SetUnifiedOrderUrl(unifiedOrderUrl string) {
+func (s *WechatpayClient) SetUnifiedOrderUrl(unifiedOrderUrl string) {
 	s.unifiedOrderUrl = unifiedOrderUrl
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置通知地址
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) SetNotifyUrl(notifyUrl string) {
+func (s *WechatpayClient) SetNotifyUrl(notifyUrl string) {
 	s.notifyUrl = notifyUrl
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置订单支付过期时间，单位小时（24）
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) SetTimeoutExpress(timeoutExpress int) {
+func (s *WechatpayClient) SetTimeoutExpress(timeoutExpress int) {
 	s.timeoutExpress = timeoutExpress
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 统一下单
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) UnifiedOrder(
+func (s *WechatpayClient) UnifiedOrder(
 	outTradeNo, body string,
 	amount float64,
 	ip string,
@@ -102,7 +102,7 @@ func (s *wechatpayClient) UnifiedOrder(
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取统一下单Xml字符串
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) GetUnifiedOrderXml(
+func (s *WechatpayClient) GetUnifiedOrderXml(
 	outTradeNo, body string,
 	amount float64,
 	ip string,
@@ -166,7 +166,7 @@ func (s *wechatpayClient) GetUnifiedOrderXml(
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取Api统一下单请求签名
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) UnifiedOrderRequestSign(
+func (s *WechatpayClient) UnifiedOrderRequestSign(
 	unifiedOrderRequest *UnifiedOrderRequest) string {
 	params := unifiedOrderRequest.ToMap()
 
@@ -180,7 +180,7 @@ func (s *wechatpayClient) UnifiedOrderRequestSign(
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取Api统一下单结果签名
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) UnifiedOrderResultSign(
+func (s *WechatpayClient) UnifiedOrderResultSign(
 	unifiedOrderResult *UnifiedOrderResult) string {
 	params := unifiedOrderResult.ToMap()
 
@@ -194,7 +194,7 @@ func (s *wechatpayClient) UnifiedOrderResultSign(
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取统一下单响应结果
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *wechatpayClient) GetUnifiedOrderResult(
+func (s *WechatpayClient) GetUnifiedOrderResult(
 	unifiedOrderResponse *UnifiedOrderResponse) *UnifiedOrderResult {
 
 	unifiedOrderResult := new(UnifiedOrderResult)
