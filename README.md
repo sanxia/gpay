@@ -1,7 +1,6 @@
 # gpay
 golang payment for alipay, wechatpay
 
-===========================
 Alipay, Wechatpay Golang Client
 ===========================
 
