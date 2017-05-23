@@ -1,7 +1,7 @@
-package domain
+package alipay
 
 /* ================================================================================
-* AppPayReturnResponse数据域结构
+ * AppPayReturnResponse数据域结构
  * qq group: 582452342
  * email   : 2091938785@qq.com
  * author  : 美丽的地球啊

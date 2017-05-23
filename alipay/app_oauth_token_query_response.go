@@ -1,4 +1,4 @@
-package domain
+package alipay
 
 /* ================================================================================
  * AppOauthTokenQueryResponse数据域结构

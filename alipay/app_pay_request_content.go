@@ -1,4 +1,4 @@
-package domain
+package alipay
 
 /* ================================================================================
  * AppPayRequestContent数据域结构

@@ -1,4 +1,4 @@
-package domain
+package alipay
 
 /* ================================================================================
  * AppPayNotifyResponse数据域结构

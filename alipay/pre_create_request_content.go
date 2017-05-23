@@ -1,4 +1,4 @@
-package domain
+package alipay
 
 /* ================================================================================
  * PreCreateyRequestContent数据域结构

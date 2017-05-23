@@ -1,4 +1,4 @@
-package domain
+package alipay
 
 import (
 	"github.com/sanxia/glib"

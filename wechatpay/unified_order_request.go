@@ -1,4 +1,4 @@
-package domain
+package wechatpay
 
 import (
 	"encoding/xml"
@@ -12,9 +12,9 @@ import (
 
 /* ================================================================================
  * UnifiedOrderRequest数据域结构
-* qq group: 582452342
-* email   : 2091938785@qq.com
-* author  : 美丽的地球啊
+ * qq group: 582452342
+ * email   : 2091938785@qq.com
+ * author  : 美丽的地球啊
  * ================================================================================ */
 type UnifiedOrderRequest struct {
 	XMLName        xml.Name            `form:"-" json:"-" xml:"xml"`

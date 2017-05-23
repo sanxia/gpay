@@ -1,4 +1,4 @@
-package domain
+package wechatpay
 
 /* ================================================================================
 * UnifiedOrderResult数据域结构
