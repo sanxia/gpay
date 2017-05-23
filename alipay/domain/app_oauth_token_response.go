@@ -3,7 +3,9 @@ package domain
 /* ================================================================================
  * AppPayResponse数据域结构
  * api: alipay.open.auth.token.app
- * author: mliu
+ * qq group: 582452342
+ * email   : 2091938785@qq.com
+ * author  : 美丽的地球啊
  * ================================================================================ */
 type AppOauthTokenResponse struct {
 	UserId          string `form:"user_id" json:"user_id"`                     //授权商户的user_id

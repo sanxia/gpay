@@ -6,7 +6,9 @@ package domain
  * alipay.trade.create 商户通过该接口进行交易的创建下单
  * alipay.trade.close 统一收单交易关闭接口
  * alipay.trade.cancel 统一收单交易撤销接口
- * author: mliu
+ * qq group: 582452342
+ * email   : 2091938785@qq.com
+ * author  : 美丽的地球啊
  * ================================================================================ */
 type AppPayRequestContent struct {
 	SellerId           string `form:"seller_id" json:"seller_id"`                       //非必填，收款支付宝用户ID。 如果该值为空，则默认为商户签约账号对应的支付宝用户ID，如：2088102147948060

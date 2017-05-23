@@ -2,7 +2,9 @@ package domain
 
 /* ================================================================================
  * PreCreateResponse数据域结构
- * author: mliu
+ * qq group: 582452342
+ * email   : 2091938785@qq.com
+ * author  : 美丽的地球啊
  * ================================================================================ */
 type PreCreateResponse struct {
 	AlipayTradePreCreateResponse *AlipayTradePreCreateResponse `form:"alipay_trade_precreate_response" json:"alipay_trade_precreate_response"` //当前预下单请求生成的二维码码串，可以用二维码生成工具根据该码串值生成对应的二维码

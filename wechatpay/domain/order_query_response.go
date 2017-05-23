@@ -6,7 +6,9 @@ import (
 
 /* ================================================================================
 * OrderQueryResponse数据域结构
-* author: mliu
+* qq group: 582452342
+* email   : 2091938785@qq.com
+* author  : 美丽的地球啊
   <xml>
   <return_code><![CDATA[SUCCESS]]></return_code>
   <return_msg><![CDATA[OK]]></return_msg>

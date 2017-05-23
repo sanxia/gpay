@@ -2,7 +2,9 @@ package domain
 
 /* ================================================================================
  * AppPayNotifyResponse数据域结构
- * author: mliu
+ * qq group: 582452342
+ * email   : 2091938785@qq.com
+ * author  : 美丽的地球啊
  * ================================================================================ */
 type AppPayNotifyResponse struct {
 	AppId             string `form:"app_id" json:"app_id"`                           //支付宝分配给开发者的应用Id
