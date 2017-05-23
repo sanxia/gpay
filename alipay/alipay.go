@@ -21,7 +21,7 @@ import (
  * email   : 2091938785@qq.com
  * author  : 美丽的地球啊
  * ================================================================================ */
-type alipayClient struct {
+type AlipayClient struct {
 	appId           string //商户app id
 	appPrivate      string //商户app私匙（单行数据，不带-----BEGIN ... KEY-----）
 	alipayPublicKey string //阿里支付公匙（单行数据，不带-----BEGIN ... KEY-----）
@@ -34,8 +34,8 @@ type alipayClient struct {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 创建Alipay客户端
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func NewAlipayClient(appId, appPrivate, alipayPublicKey string) *alipayClient {
-	alipayClient := new(alipayClient)
+func NewAlipayClient(appId, appPrivate, alipayPublicKey string) *AlipayClient {
+	alipayClient := new(AlipayClient)
 	alipayClient.appId = appId
 	alipayClient.appPrivate = appPrivate
 	alipayClient.alipayPublicKey = alipayPublicKey
@@ -45,35 +45,35 @@ func NewAlipayClient(appId, appPrivate, alipayPublicKey string) *alipayClient {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置卖家支付宝id（不设置则已申请支付时绑定的支付宝为默认值）
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) SetSellerId(sellerId string) {
+func (s *AlipayClient) SetSellerId(sellerId string) {
 	s.sellerId = sellerId
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置网关地址
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) SetGatewayUrl(gatewayUrl string) {
+func (s *AlipayClient) SetGatewayUrl(gatewayUrl string) {
 	s.gatewayUrl = gatewayUrl
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置通知地址
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) SetNotifyUrl(notifyUrl string) {
+func (s *AlipayClient) SetNotifyUrl(notifyUrl string) {
 	s.notifyUrl = notifyUrl
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 设置订单支付过期时间（15m,24h,1d）
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) SetTimeoutExpress(timeoutExpress string) {
+func (s *AlipayClient) SetTimeoutExpress(timeoutExpress string) {
 	s.timeoutExpress = timeoutExpress
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取订单字符串给APP支付客户端
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) GetOrderString(
+func (s *AlipayClient) GetOrderString(
 	outTradeNo, subject, body string,
 	amount float64,
 	creationDate time.Time) (string, error) {
@@ -125,7 +125,7 @@ func (s *alipayClient) GetOrderString(
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取预创建支付二维码地址
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) GetOrderQrCode(
+func (s *AlipayClient) GetOrderQrCode(
 	outTradeNo, subject, body string, amount float64) (string, error) {
 	if len(outTradeNo) == 0 || len(subject) == 0 || amount <= 0.0 {
 		return "", errors.New("GetOrderQrCode Args Error")
@@ -169,8 +169,13 @@ func (s *alipayClient) GetOrderQrCode(
 	//字典kv用&链接起来，v需要url编码
 	orderString := glib.JoinMapToString(paramMap, []string{}, true)
 
+	gatewayUrl := "https://openapi.alipay.com/gateway.do"
+	if len(s.gatewayUrl) > 0 {
+		gatewayUrl = s.gatewayUrl
+	}
+
 	//发起post请求
-	respData, err := glib.HttpPost(s.gatewayUrl, orderString)
+	respData, err := glib.HttpPost(gatewayUrl, orderString)
 	if err != nil {
 		return "", err
 	}
@@ -195,7 +200,7 @@ func (s *alipayClient) GetOrderQrCode(
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 同步验签
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) ReturnVerify(
+func (s *AlipayClient) ReturnVerify(
 	returnResultResp *AppPayReturnResultResponse) (bool, error) {
 	err := errors.New("ReturnVerify SignError")
 	signString := s.GetReturnResultSignString(returnResultResp.RawResultString)
@@ -211,7 +216,7 @@ func (s *alipayClient) ReturnVerify(
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 异步验签
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) NotifyVerify(dataParams map[string]string) (bool, error) {
+func (s *AlipayClient) NotifyVerify(dataParams map[string]string) (bool, error) {
 	err := errors.New("NotifyVerify SignError")
 	if len(dataParams) == 0 {
 		return false, err
@@ -233,7 +238,7 @@ func (s *alipayClient) NotifyVerify(dataParams map[string]string) (bool, error) 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取签名
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) Sign(params map[string]string) (string, error) {
+func (s *AlipayClient) Sign(params map[string]string) (string, error) {
 	//待签名字符串
 	waitingSignString := glib.JoinMapToString(params, []string{"sign"}, false)
 	sign, err := glib.Sha256WithRsa(waitingSignString, s.appPrivate)
@@ -244,7 +249,7 @@ func (s *alipayClient) Sign(params map[string]string) (string, error) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 从同步结果原始字符串获取待签名的字符串
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *alipayClient) GetReturnResultSignString(returnResultString string) string {
+func (s *AlipayClient) GetReturnResultSignString(returnResultString string) string {
 	signString := ""
 	patern := `"alipay_trade_app_pay_response":(.*[\}]),`
 	if reg, err := regexp.Compile(patern); err == nil {
