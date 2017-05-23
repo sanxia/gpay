@@ -19,7 +19,6 @@ import (
 var alipayClient *alipay.AlipayClient
 
 func init(){
-    //init alipay client
     appId := "you app id"
     appPrivate := "you app single line private"
     alipayPublicKey := "alipay single line public"
@@ -27,7 +26,6 @@ func init(){
 }
 
 func AlipayOrder() (string, error){
-    //get order string
     outTradeNo := "test-1234567890"
     subject := "mall produce test123"
     body := "mall product info test123"
@@ -43,8 +41,7 @@ func AlipayOrder() (string, error){
     return orderString, nil
 }
 
-func AlipayQrOrder() (string, error){    
-    //get qr code order
+func AlipayQrOrder() (string, error){
     outTradeNo := "test-1234567890"
     subject := "mall produce test123"
     body := "mall product info test123"
@@ -73,7 +70,6 @@ import (
 var wechatpayClient *wechatpay.WechatpayClient
 
 func init(){
-    //init wechatpay client
     appId := "you app id"
     partnerId := "you partner id"
     apiSecret := "you api secret"
@@ -81,10 +77,9 @@ func init(){
 }
 
 func WechatpayUnifiedOrder() (*wechatpay.UnifiedOrderResponse, error){
-    //get order string
     outTradeNo := "test-1234567890"
     body := "mall product info test123"
-    amount := 1 //单位分
+    amount := 1
     ip := "127.0.0.1"
 
     goodsDetail := &wechatpay.UnifiedOrderDetailItem{
