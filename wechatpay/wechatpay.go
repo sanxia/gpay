@@ -203,7 +203,7 @@ func (s *WechatpayClient) GetUnifiedOrderResult(
 	unifiedOrderResult.PrepayId = unifiedOrderResponse.PrepayId
 	unifiedOrderResult.Package = "Sign=WXPay"
 	unifiedOrderResult.NonceStr = glib.Guid()
-	unifiedOrderResult.Timestamp = fmt.Sprintf("%d", glib.GetUnixTimestamp())
+	unifiedOrderResult.Timestamp = fmt.Sprintf("%d", glib.UnixTimestamp())
 
 	//签名统一下单响应结果签名
 	sign := s.UnifiedOrderResultSign(unifiedOrderResult)
