@@ -8,7 +8,7 @@ import (
 * PayResultNotify数据域结构
 * qq group: 582452342
 * email   : 2091938785@qq.com
-* author  : 美丽的地球啊
+* author  : 美丽的地球啊 - mliu
   <xml>
   <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
   <attach><![CDATA[支付测试]]></attach>

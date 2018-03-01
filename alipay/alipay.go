@@ -19,7 +19,7 @@ import (
  * 支付宝支付签名工具模块
  * qq group: 582452342
  * email   : 2091938785@qq.com
- * author  : 美丽的地球啊
+ * author  : 美丽的地球啊 - mliu
  * ================================================================================ */
 type AlipayClient struct {
 	appId           string //商户app id

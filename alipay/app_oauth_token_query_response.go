@@ -5,7 +5,7 @@ package alipay
  * api: alipay.open.auth.token.app.query
  * qq group: 582452342
  * email   : 2091938785@qq.com
- * author  : 美丽的地球啊
+ * author  : 美丽的地球啊 - mliu
  * ================================================================================ */
 type AppOauthTokenQueryResponse struct {
 	UserId      string   `form:"user_id" json:"user_id"`           //授权商户的user_id

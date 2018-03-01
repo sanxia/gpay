@@ -12,7 +12,7 @@ import (
  * alipay.trade.cancel 统一收单交易撤销接口
  * qq group: 582452342
  * email   : 2091938785@qq.com
- * author  : 美丽的地球啊
+ * author  : 美丽的地球啊 - mliu
  * ================================================================================ */
 type AppPayRequest struct {
 	AppId      string                `form:"app_id" json:"app_id"`           //支付宝分配给开发者的应用ID,2014072300007148

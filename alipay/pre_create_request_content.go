@@ -4,7 +4,7 @@ package alipay
  * PreCreateyRequestContent数据域结构
  * qq group: 582452342
  * email   : 2091938785@qq.com
- * author  : 美丽的地球啊
+ * author  : 美丽的地球啊 - mliu
  * ================================================================================ */
 type PreCreateyRequestContent struct {
 	SellerId             string                   `form:"seller_id" json:"seller_id"`                         //卖家支付宝用户ID。 如果该值为空，则默认为商户签约账号对应的支付宝用户ID

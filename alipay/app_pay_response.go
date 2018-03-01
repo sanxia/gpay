@@ -4,7 +4,7 @@ package alipay
  * AppPayResponse数据域结构
  * qq group: 582452342
  * email   : 2091938785@qq.com
- * author  : 美丽的地球啊
+ * author  : 美丽的地球啊 - mliu
  * ================================================================================ */
 type AppPayResponse struct {
 	TradeNo     string `form:"trade_no" json:"trade_no"`         //该交易在支付宝系统中的交易流水号。
