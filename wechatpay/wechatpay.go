@@ -1,6 +1,7 @@
 package wechatpay
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -83,17 +84,22 @@ func (s *WechatpayClient) UnifiedOrder(
 	if len(s.unifiedOrderUrl) > 0 {
 		unifiedOrderUrl = s.unifiedOrderUrl
 	}
+
 	respData, err := glib.HttpPost(unifiedOrderUrl, xmlString)
+	log.Printf("UnifiedOrder raw resp: %s", respData)
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("UnifiedOrder raw resp: %s", respData)
 
 	//解析Xml数据为对象
 	unifiedOrderResponse := new(UnifiedOrderResponse)
 	if err := glib.FromXml(respData, unifiedOrderResponse); err != nil {
 		return nil, err
+	} else {
+		log.Printf("UnifiedOrderResponse ReturnCode: %s, ReturnMsg: %s", unifiedOrderResponse.ReturnCode, unifiedOrderResponse.ReturnMsg)
+		if unifiedOrderResponse.ReturnCode == "FAIL" || len(unifiedOrderResponse.ReturnMsg) > 0 {
+			return nil, errors.New(unifiedOrderResponse.ReturnMsg)
+		}
 	}
 
 	return unifiedOrderResponse, nil
@@ -123,7 +129,7 @@ func (s *WechatpayClient) GetUnifiedOrderXml(
 	expiredate := nowDate.Add(time.Duration(timeoutExpress) * time.Hour)
 	timeStartString := glib.TimeToString(nowDate, "20060102150405")
 	timeExpireString := glib.TimeToString(expiredate, "20060102150405")
-	log.Printf("timeExpireString: %s", timeExpireString)
+	log.Printf("timeStartString: %s, timeExpireString: %s", timeStartString, timeExpireString)
 
 	unifiedOrderRequest := new(UnifiedOrderRequest)
 	unifiedOrderRequest.AppId = s.appId
@@ -172,8 +178,13 @@ func (s *WechatpayClient) UnifiedOrderRequestSign(
 
 	//待签名字符串
 	waitingSignString := glib.JoinMapToString(params, []string{"sign"}, false)
+	log.Printf("UnifiedOrderRequestSign waitingSignString: %s", waitingSignString)
+
 	waitingSignString = fmt.Sprintf("%s&key=%s", waitingSignString, s.apiSecret)
+	log.Printf("UnifiedOrderRequestSign waitingSignString append secret: %s", waitingSignString)
+
 	sign := strings.ToUpper(glib.Md5(waitingSignString))
+
 	return sign
 }
 
