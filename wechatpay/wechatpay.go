@@ -96,11 +96,12 @@ func (s *WechatpayClient) UnifiedOrder(
 	if err := glib.FromXml(respData, unifiedOrderResponse); err != nil {
 		return nil, err
 	} else {
-		log.Printf("UnifiedOrderResponse ReturnCode: %s, ReturnMsg: %s", unifiedOrderResponse.ReturnCode, unifiedOrderResponse.ReturnMsg)
-		if unifiedOrderResponse.ReturnCode == "FAIL" || len(unifiedOrderResponse.ReturnMsg) > 0 {
+		if unifiedOrderResponse.ReturnCode == "FAIL" {
 			return nil, errors.New(unifiedOrderResponse.ReturnMsg)
 		}
 	}
+
+	log.Printf("UnifiedOrderResponse ReturnCode: %s, ReturnMsg: %s", unifiedOrderResponse.ReturnCode, unifiedOrderResponse.ReturnMsg)
 
 	return unifiedOrderResponse, nil
 }
