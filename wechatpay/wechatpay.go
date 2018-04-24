@@ -101,8 +101,6 @@ func (s *WechatpayClient) UnifiedOrder(
 		}
 	}
 
-	log.Printf("UnifiedOrderResponse ReturnCode: %s, ReturnMsg: %s", unifiedOrderResponse.ReturnCode, unifiedOrderResponse.ReturnMsg)
-
 	return unifiedOrderResponse, nil
 }
 
@@ -130,7 +128,6 @@ func (s *WechatpayClient) GetUnifiedOrderXml(
 	expiredate := nowDate.Add(time.Duration(timeoutExpress) * time.Hour)
 	timeStartString := glib.TimeToString(nowDate, "20060102150405")
 	timeExpireString := glib.TimeToString(expiredate, "20060102150405")
-	log.Printf("timeStartString: %s, timeExpireString: %s", timeStartString, timeExpireString)
 
 	unifiedOrderRequest := new(UnifiedOrderRequest)
 	unifiedOrderRequest.AppId = s.appId
@@ -178,7 +175,6 @@ func (s *WechatpayClient) UnifiedOrderRequestSign(
 
 	//待签名字符串
 	waitingSignString := glib.JoinMapToString(params, []string{"sign"}, false)
-	log.Printf("UnifiedOrderRequestSign waitingSignString: %s", waitingSignString)
 
 	waitingSignString = fmt.Sprintf("%s&key=%s", waitingSignString, s.apiSecret)
 	log.Printf("UnifiedOrderRequestSign waitingSignString append secret: %s", waitingSignString)
@@ -220,7 +216,6 @@ func (s *WechatpayClient) GetUnifiedOrderResult(
 	//签名统一下单响应结果签名
 	sign := s.UnifiedOrderResultSign(unifiedOrderResult)
 	unifiedOrderResult.Sign = sign
-	log.Printf("UnifiedOrderResult sign: %s", sign)
 
 	return unifiedOrderResult
 }
