@@ -160,7 +160,6 @@ func (s *WechatpayClient) GetUnifiedOrderXml(
 	//签名统一下单请求签名
 	sign := s.UnifiedOrderRequestSign(unifiedOrderRequest)
 	unifiedOrderRequest.Sign = sign
-	log.Printf("UnifiedOrder sign: %s", sign)
 
 	//获取xml请求字符串
 	xmlString := unifiedOrderRequest.ToXml()
@@ -184,6 +183,7 @@ func (s *WechatpayClient) UnifiedOrderRequestSign(
 	log.Printf("UnifiedOrderRequestSign waitingSignString append secret: %s", waitingSignString)
 
 	sign := strings.ToUpper(glib.Md5(waitingSignString))
+	log.Printf("UnifiedOrderRequestSign sign: %s", sign)
 
 	return sign
 }
