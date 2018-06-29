@@ -76,6 +76,7 @@ func (s *AlipayClient) SetTimeoutExpress(timeoutExpress string) {
 func (s *AlipayClient) GetOrderString(
 	outTradeNo, subject, body string,
 	amount float64,
+	passbackParams string,
 	creationDate time.Time) (string, error) {
 
 	appPayRequest := new(AppPayRequest)
@@ -87,11 +88,13 @@ func (s *AlipayClient) GetOrderString(
 	appPayRequest.NotifyUrl = s.notifyUrl
 	appPayRequest.Timestamp = glib.TimeToString(creationDate)
 
+	//业务内容
 	appPayRequestContent := new(AppPayRequestContent)
 	appPayRequestContent.SellerId = s.sellerId
 	appPayRequestContent.OutTradeNo = outTradeNo
 	appPayRequestContent.Subject = subject
 	appPayRequestContent.Body = body
+	appPayRequestContent.PassbackParams = passbackParams
 	appPayRequestContent.TotalAmount = fmt.Sprintf("%.2f", amount)
 	appPayRequestContent.ProductCode = "QUICK_MSECURITY_PAY"
 
@@ -126,7 +129,9 @@ func (s *AlipayClient) GetOrderString(
  * 获取预创建支付二维码地址
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 func (s *AlipayClient) GetOrderQrCode(
-	outTradeNo, subject, body string, amount float64) (string, error) {
+	outTradeNo, subject, body string,
+	amount float64) (string, error) {
+
 	if len(outTradeNo) == 0 || len(subject) == 0 || amount <= 0.0 {
 		return "", errors.New("GetOrderQrCode Args Error")
 	}

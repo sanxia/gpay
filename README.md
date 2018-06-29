@@ -33,12 +33,14 @@ AlipayClient Api
         subject := "mall produce test123"
         body := "mall product info test123"
         amount := 0.01
+        passbackParams := ""
         creationDate := time.Now()
         orderString, err := alipayClient.GetOrderString(
             outTradeNo,
             subject,
             body,
             amount,
+            passbackParams,
             creationDate)
 
         return orderString, nil
@@ -83,6 +85,7 @@ WechatpayClient Api
         outTradeNo := "test-1234567890"
         body := "mall product info test123"
         amount := 1
+        attach := ""
         ip := "127.0.0.1"
 
         goodsDetail := &wechatpay.UnifiedOrderDetailItem{
@@ -102,6 +105,7 @@ WechatpayClient Api
             outTradeNo,
             body,
             amount,
+            attach,
             ip,
             unifiedOrderDetail)
     }

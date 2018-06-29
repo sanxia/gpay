@@ -73,11 +73,12 @@ func (s *WechatpayClient) SetTimeoutExpress(timeoutExpress int) {
 func (s *WechatpayClient) UnifiedOrder(
 	outTradeNo, body string,
 	amount float64,
+	attach string,
 	ip string,
 	args ...*UnifiedOrderDetail) (*UnifiedOrderResponse, error) {
 
 	//获取xml请求字符串
-	xmlString := s.GetUnifiedOrderXml(outTradeNo, body, amount, ip)
+	xmlString := s.GetUnifiedOrderXml(outTradeNo, body, amount, attach, ip, args...)
 
 	//发起post请求
 	unifiedOrderUrl := "https://api.mch.weixin.qq.com/pay/unifiedorder"
@@ -110,6 +111,7 @@ func (s *WechatpayClient) UnifiedOrder(
 func (s *WechatpayClient) GetUnifiedOrderXml(
 	outTradeNo, body string,
 	amount float64,
+	attach string,
 	ip string,
 	args ...*UnifiedOrderDetail) string {
 
@@ -136,7 +138,7 @@ func (s *WechatpayClient) GetUnifiedOrderXml(
 	unifiedOrderRequest.NonceStr = glib.Guid()
 	unifiedOrderRequest.Body = body
 	unifiedOrderRequest.Detail = detail
-	unifiedOrderRequest.Attach = ""
+	unifiedOrderRequest.Attach = attach
 	unifiedOrderRequest.OutTradeNo = outTradeNo
 
 	feeType := "CNY"
