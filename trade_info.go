@@ -1,4 +1,4 @@
-package alipay
+package gpay
 
 import (
 	"time"
@@ -12,7 +12,8 @@ import (
  * author  : 美丽的地球啊 - mliu
  * ================================================================================ */
 type TradeInfo struct {
-	OutTradeNo   string    `form:"out_trade_no" json:"out_trade_no"`   //外部交易号
+	Id           string    `form:"id" json:"id"`                       //外部交易主键
+	OutTradeNo   string    `form:"out_trade_no" json:"out_trade_no"`   //外部唯一交易号
 	Subject      string    `form:"subject" json:"subject"`             //主题
 	Body         string    `form:"body" json:"body"`                   //内容体
 	Amount       float64   `form:"amount" json:"amount"`               //金额
