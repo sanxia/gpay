@@ -225,7 +225,7 @@ func (s *WechatpayClient) GetUnifiedOrderResult(
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- * 获取统一下单响应结果
+ * 获取异步通知响应数据结果
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 func (s *WechatpayClient) GetNotifyResult(httpRequest *http.Request) (*PayResultNotify, error) {
 	resultNotify := new(PayResultNotify)

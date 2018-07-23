@@ -269,7 +269,7 @@ func (s *AlipayClient) GetReturnResultSignString(returnResultString string) stri
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- * 从异步通知原始字符串获取通知响应数据
+ * 获取异步通知响应数据结果
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 func (s *AlipayClient) GetNotifyResult(httpRequest *http.Request) (map[string]string, *AppPayNotifyResponse, error) {
 	notifyData := make(map[string]string, 0)
