@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -265,6 +266,46 @@ func (s *AlipayClient) GetReturnResultSignString(returnResultString string) stri
 	}
 
 	return signString
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ * 从异步通知原始字符串获取通知响应
+ * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+func (s *AlipayClient) GetNotifyResponse(rawData string) *alipay.AppPayNotifyResponse {
+	notifyResponse := new(alipay.AppPayNotifyResponse)
+	if len(rawData) == 0 {
+		return notifyResponse
+	}
+
+	//请求参数转换成字典
+	datas := strings.Split(string(rawData), "&")
+	dataMap := make(map[string]string, 0)
+	for _, data := range datas {
+		kvPairs := strings.Split(data, "=")
+		key := kvPairs[0]
+		value, _ := url.QueryUnescape(kvPairs[1])
+
+		dataMap[key] = value
+	}
+
+	//通知数据
+	if tradeNo, isOk := dataMap["trade_no"]; isOk {
+		notifyResponse.TradeNo = tradeNo
+	}
+
+	if outTradeNo, isOk := dataMap["out_trade_no"]; isOk {
+		notifyResponse.OutTradeNo = outTradeNo
+	}
+
+	if totalAmountString, isOk := dataMap["total_amount"]; isOk {
+		notifyResponse.TotalAmount = totalAmountString
+	}
+
+	if tradeStatus, isOk := dataMap["trade_status"]; isOk {
+		notifyResponse.TradeStatus = tradeStatus
+	}
+
+	return notifyResponse
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
