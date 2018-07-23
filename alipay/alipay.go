@@ -3,7 +3,9 @@ package alipay
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
@@ -242,9 +244,9 @@ func (s *AlipayClient) NotifyVerify(dataParams map[string]string) (bool, error) 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * 获取签名
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *AlipayClient) Sign(params map[string]string) (string, error) {
+func (s *AlipayClient) Sign(datas map[string]string) (string, error) {
 	//待签名字符串
-	waitingSignString := glib.JoinMapToString(params, []string{"sign"}, false)
+	waitingSignString := glib.JoinMapToString(datas, []string{"sign"}, false)
 	sign, err := glib.Sha256WithRsa(waitingSignString, s.appPrivate)
 
 	return sign, err
@@ -267,152 +269,160 @@ func (s *AlipayClient) GetReturnResultSignString(returnResultString string) stri
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- * 从异步通知原始字符串获取通知响应
+ * 从异步通知原始字符串获取通知响应数据
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-func (s *AlipayClient) GetNotifyResponse(rawData string) *AppPayNotifyResponse {
-	dataMap := make(map[string]string, 0)
+func (s *AlipayClient) GetNotifyResult(httpRequest *http.Request) (map[string]string, *AppPayNotifyResponse, error) {
+	notifyData := make(map[string]string, 0)
 	notifyResponse := new(AppPayNotifyResponse)
 
-	if len(rawData) == 0 {
-		return notifyResponse
+	//获取请求Body原始数据
+	rawBody, err := ioutil.ReadAll(httpRequest.Body)
+	if err != nil {
+		return notifyData, notifyResponse, err
+	}
+
+	defer httpRequest.Body.Close()
+
+	if len(rawBody) == 0 {
+		return notifyData, notifyResponse, errors.New("request body data is null")
 	}
 
 	//请求参数转换成字典
-	datas := strings.Split(rawData, "&")
+	datas := strings.Split(string(rawBody), "&")
 	for _, data := range datas {
 		kvPairs := strings.Split(data, "=")
 		key := kvPairs[0]
 		value, _ := url.QueryUnescape(kvPairs[1])
 
-		dataMap[key] = value
+		notifyData[key] = value
 	}
 
 	//通知数据
-	if appId, isOk := dataMap["app_id"]; isOk {
+	if appId, isOk := notifyData["app_id"]; isOk {
 		notifyResponse.AppId = appId
 	}
 
-	if subject, isOk := dataMap["subject"]; isOk {
+	if subject, isOk := notifyData["subject"]; isOk {
 		notifyResponse.Subject = subject
 	}
 
-	if body, isOk := dataMap["body"]; isOk {
+	if body, isOk := notifyData["body"]; isOk {
 		notifyResponse.Body = body
 	}
 
-	if tradeNo, isOk := dataMap["trade_no"]; isOk {
+	if tradeNo, isOk := notifyData["trade_no"]; isOk {
 		notifyResponse.TradeNo = tradeNo
 	}
 
-	if outTradeNo, isOk := dataMap["out_trade_no"]; isOk {
+	if outTradeNo, isOk := notifyData["out_trade_no"]; isOk {
 		notifyResponse.OutTradeNo = outTradeNo
 	}
 
-	if outBizNo, isOk := dataMap["out_biz_no"]; isOk {
+	if outBizNo, isOk := notifyData["out_biz_no"]; isOk {
 		notifyResponse.OutBizNo = outBizNo
 	}
 
-	if buyerId, isOk := dataMap["buyer_id"]; isOk {
+	if buyerId, isOk := notifyData["buyer_id"]; isOk {
 		notifyResponse.BuyerId = buyerId
 	}
 
-	if buyerLogonId, isOk := dataMap["buyer_logon_id"]; isOk {
+	if buyerLogonId, isOk := notifyData["buyer_logon_id"]; isOk {
 		notifyResponse.BuyerLogonId = buyerLogonId
 	}
 
-	if sellerId, isOk := dataMap["seller_id"]; isOk {
+	if sellerId, isOk := notifyData["seller_id"]; isOk {
 		notifyResponse.SellerId = sellerId
 	}
 
-	if sellerEmail, isOk := dataMap["seller_email"]; isOk {
+	if sellerEmail, isOk := notifyData["seller_email"]; isOk {
 		notifyResponse.SellerEmail = sellerEmail
 	}
 
-	if tradeStatus, isOk := dataMap["trade_status"]; isOk {
+	if tradeStatus, isOk := notifyData["trade_status"]; isOk {
 		notifyResponse.TradeStatus = tradeStatus
 	}
 
-	if totalAmountString, isOk := dataMap["total_amount"]; isOk {
+	if totalAmountString, isOk := notifyData["total_amount"]; isOk {
 		notifyResponse.TotalAmount = totalAmountString
 	}
 
-	if receiptAmount, isOk := dataMap["receipt_amount"]; isOk {
+	if receiptAmount, isOk := notifyData["receipt_amount"]; isOk {
 		notifyResponse.ReceiptAmount = receiptAmount
 	}
 
-	if invoiceAmount, isOk := dataMap["invoice_amount"]; isOk {
+	if invoiceAmount, isOk := notifyData["invoice_amount"]; isOk {
 		notifyResponse.InvoiceAmount = invoiceAmount
 	}
 
-	if buyerPayAmount, isOk := dataMap["buyer_pay_amount"]; isOk {
+	if buyerPayAmount, isOk := notifyData["buyer_pay_amount"]; isOk {
 		notifyResponse.BuyerPayAmount = buyerPayAmount
 	}
 
-	if pointAmount, isOk := dataMap["point_amount"]; isOk {
+	if pointAmount, isOk := notifyData["point_amount"]; isOk {
 		notifyResponse.PointAmount = pointAmount
 	}
 
-	if refundFee, isOk := dataMap["refund_fee"]; isOk {
+	if refundFee, isOk := notifyData["refund_fee"]; isOk {
 		notifyResponse.RefundFee = refundFee
 	}
 
-	if fundBillList, isOk := dataMap["fund_bill_list"]; isOk {
+	if fundBillList, isOk := notifyData["fund_bill_list"]; isOk {
 		notifyResponse.FundBillList = fundBillList
 	}
 
-	if voucherDetailList, isOk := dataMap["voucher_detail_list"]; isOk {
+	if voucherDetailList, isOk := notifyData["voucher_detail_list"]; isOk {
 		notifyResponse.VoucherDetailList = voucherDetailList
 	}
 
-	if passbackParams, isOk := dataMap["passback_params"]; isOk {
+	if passbackParams, isOk := notifyData["passback_params"]; isOk {
 		notifyResponse.PassbackParams = passbackParams
 	}
 
-	if charset, isOk := dataMap["charset"]; isOk {
+	if charset, isOk := notifyData["charset"]; isOk {
 		notifyResponse.Charset = charset
 	}
 
-	if sign, isOk := dataMap["sign"]; isOk {
+	if sign, isOk := notifyData["sign"]; isOk {
 		notifyResponse.Sign = sign
 	}
 
-	if signType, isOk := dataMap["sign_type"]; isOk {
+	if signType, isOk := notifyData["sign_type"]; isOk {
 		notifyResponse.SignType = signType
 	}
 
-	if notifyId, isOk := dataMap["notify_id"]; isOk {
+	if notifyId, isOk := notifyData["notify_id"]; isOk {
 		notifyResponse.NotifyId = notifyId
 	}
 
-	if notifyType, isOk := dataMap["notify_type"]; isOk {
+	if notifyType, isOk := notifyData["notify_type"]; isOk {
 		notifyResponse.NotifyType = notifyType
 	}
 
-	if notifyTime, isOk := dataMap["notify_time"]; isOk {
+	if notifyTime, isOk := notifyData["notify_time"]; isOk {
 		notifyResponse.NotifyTime = notifyTime
 	}
 
-	if gmtCreate, isOk := dataMap["gmt_create"]; isOk {
+	if gmtCreate, isOk := notifyData["gmt_create"]; isOk {
 		notifyResponse.GmtCreate = gmtCreate
 	}
 
-	if gmtPayment, isOk := dataMap["gmt_payment"]; isOk {
+	if gmtPayment, isOk := notifyData["gmt_payment"]; isOk {
 		notifyResponse.GmtPayment = gmtPayment
 	}
 
-	if gmtRefund, isOk := dataMap["gmt_refund"]; isOk {
+	if gmtRefund, isOk := notifyData["gmt_refund"]; isOk {
 		notifyResponse.GmtRefund = gmtRefund
 	}
 
-	if gmtClose, isOk := dataMap["gmt_close"]; isOk {
+	if gmtClose, isOk := notifyData["gmt_close"]; isOk {
 		notifyResponse.GmtClose = gmtClose
 	}
 
-	if version, isOk := dataMap["version"]; isOk {
+	if version, isOk := notifyData["version"]; isOk {
 		notifyResponse.Version = version
 	}
 
-	return notifyResponse
+	return notifyData, notifyResponse, nil
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

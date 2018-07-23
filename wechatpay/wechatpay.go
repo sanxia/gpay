@@ -3,7 +3,9 @@ package wechatpay
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -220,4 +222,29 @@ func (s *WechatpayClient) GetUnifiedOrderResult(
 	unifiedOrderResult.Sign = sign
 
 	return unifiedOrderResult
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ * 获取统一下单响应结果
+ * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+func (s *WechatpayClient) GetNotifyResult(httpRequest *http.Request) (*PayResultNotify, error) {
+	resultNotify := new(PayResultNotify)
+
+	//获取请求Body原始数据
+	rawBody, err := ioutil.ReadAll(httpRequest.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	defer httpRequest.Body.Close()
+
+	if len(rawBody) == 0 {
+		return nil, errors.New("request body data is null")
+	}
+
+	if err := glib.FromXml(string(rawBody), resultNotify); err != nil {
+		return nil, err
+	}
+
+	return resultNotify, nil
 }
