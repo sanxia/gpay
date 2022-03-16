@@ -130,8 +130,9 @@ func (s *WechatpayClient) GetUnifiedOrderXml(
 
 	nowDate := time.Now()
 	expiredate := nowDate.Add(time.Duration(timeoutExpress) * time.Hour)
-	timeStartString := glib.TimeToString(nowDate, "20060102150405")
-	timeExpireString := glib.TimeToString(expiredate, "20060102150405")
+	timeFormat := "20060102150405"
+	timeStartString := glib.TimeToString(nowDate, timeFormat)
+	timeExpireString := glib.TimeToString(expiredate, timeFormat)
 
 	unifiedOrderRequest := new(UnifiedOrderRequest)
 	unifiedOrderRequest.AppId = s.appId

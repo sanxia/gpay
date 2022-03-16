@@ -12,100 +12,107 @@ AlipayClient Api
 * NotifyVerify
 ---------------------------
 
-    import (
-        "time"
-    )
-    import (
-        "github.com/sanxia/gpay/alipay"
-    )
+```
+import (
+    "time"
+)
 
-    var alipayClient *alipay.AlipayClient
+import (
+    "github.com/sanxia/gpay/alipay"
+)
 
-    func init(){
-        appId := "you app id"
-        appPrivate := "you app single line private"
-        alipayPublicKey := "alipay single line public"
-        alipayClient = alipay.NewAlipayClient(appId, appPrivate, alipayPublicKey)
-    }
+var alipayClient *alipay.AlipayClient
 
-    func AlipayOrder() (string, error){
-        outTradeNo := "test-1234567890"
-        subject := "mall produce test123"
-        body := "mall product info test123"
-        amount := 0.01
-        passbackParams := ""
-        creationDate := time.Now()
-        orderString, err := alipayClient.GetOrderString(
-            outTradeNo,
-            subject,
-            body,
-            amount,
-            passbackParams,
-            creationDate)
+func init(){
+    appId := "you app id"
+    appPrivate := "you app single line private"
+    alipayPublicKey := "alipay single line public"
+    alipayClient = alipay.NewAlipayClient(appId, appPrivate, alipayPublicKey)
+}
 
-        return orderString, nil
-    }
+func AlipayOrder() (string, error){
+    outTradeNo := "test-1234567890"
+    subject := "mall produce test123"
+    body := "mall product info test123"
+    amount := 0.01
+    passbackParams := ""
+    creationDate := time.Now()
+    orderString, err := alipayClient.GetOrderString(
+        outTradeNo,
+        subject,
+        body,
+        amount,
+        passbackParams,
+        creationDate)
 
-    func AlipayQrOrder() (string, error){
-        outTradeNo := "test-1234567890"
-        subject := "mall produce test123"
-        body := "mall product info test123"
-        amount := 0.01
-        orderQrCode, err := alipayClient.GetOrderQrCode(
-            outTradeNo,
-            subject,
-            body,
-            amount)
+    return orderString, nil
+}
 
-        return orderQrCode, nil
-    }
+func AlipayQrOrder() (string, error){
+    outTradeNo := "test-1234567890"
+    subject := "mall produce test123"
+    body := "mall product info test123"
+    amount := 0.01
+    orderQrCode, err := alipayClient.GetOrderQrCode(
+        outTradeNo,
+        subject,
+        body,
+        amount)
+
+    return orderQrCode, nil
+}
+```
 
 
 WechatpayClient Api
 ---------------------------
 * UnifiedOrder
 ---------------------------
-    import (
-        "time"
-    )
-    import (
-        "github.com/sanxia/gpay/wechatpay"
-    )
+```
+import (
+    "time"
+)
 
-    var wechatpayClient *wechatpay.WechatpayClient
+import (
+    "github.com/sanxia/gpay/wechatpay"
+)
 
-    func init(){
-        appId := "you app id"
-        partnerId := "you partner id"
-        apiSecret := "you api secret"
-        wechatpayClient = wechatpay.NewWechatpayClient(appId, partnerId, apiSecret)
+var wechatpayClient *wechatpay.WechatpayClient
+
+func init(){
+    appId := "you app id"
+    partnerId := "you partner id"
+    apiSecret := "you api secret"
+    wechatpayClient = wechatpay.NewWechatpayClient(appId, partnerId, apiSecret)
+}
+
+func WechatpayUnifiedOrder() (*wechatpay.UnifiedOrderResponse, error){
+    outTradeNo := "test-1234567890"
+    body := "mall product info test123"
+    amount := 1
+    attach := ""
+    ip := "127.0.0.1"
+
+    goodsDetail := &wechatpay.UnifiedOrderDetailItem{
+        GoodsId: "test123",
+        GoodsName: "test product",
+        Quantity: 1,
+        Price: amount,
     }
 
-    func WechatpayUnifiedOrder() (*wechatpay.UnifiedOrderResponse, error){
-        outTradeNo := "test-1234567890"
-        body := "mall product info test123"
-        amount := 1
-        attach := ""
-        ip := "127.0.0.1"
-
-        goodsDetail := &wechatpay.UnifiedOrderDetailItem{
-            GoodsId: "test123",
-            GoodsName: "test product",
-            Quantity: 1,
-            Price: amount,
-        }
-        unifiedOrderDetail := &wechatpay
-        .UnifiedOrderDetail{
-            GoodsDetail: []*UnifiedOrderDetailItem{
-                goodsDetail
-            },
-        }
-
-        return wechatpayClient.UnifiedOrder(
-            outTradeNo,
-            body,
-            amount,
-            attach,
-            ip,
-            unifiedOrderDetail)
+    unifiedOrderDetail := &wechatpay
+    .UnifiedOrderDetail{
+        GoodsDetail: []*UnifiedOrderDetailItem{
+            goodsDetail
+        },
     }
+
+    return wechatpayClient.UnifiedOrder(
+        outTradeNo,
+        body,
+        amount,
+        attach,
+        ip,
+        unifiedOrderDetail)
+}
+```
